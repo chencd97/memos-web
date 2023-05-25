@@ -1,4 +1,4 @@
-name: Nginx config push servers
+name: push servers
 
 on:
     push:
@@ -19,30 +19,23 @@ jobs:
                   ls -al
 
             # 使用 “>” 和文本内容缩进表示的块, 将块中回车替换为空格，最终连接成一行
-            - name: del server file
+            - name: zip
               run: >-
-                  sshpass -p ${{secrets.CHENCD97_SERVER_PASSWORD}}
-                  ssh -p ${{secrets.CHENCD97_SERVER_PORT}}
-                  -o StrictHostKeyChecking=no ${{secrets.CHENCD97_SERVER_USERNAME}}@${{secrets.CHENCD97_SERVER_ADDRESS}}
-                  "cd /home/docker/nginx && rm -rf ./nginx.conf && rm -rf ./_config/*.conf && rm -rf ./_github-upload.temp"
+                  zip -r ./memos-web.zip ./*
 
-            - name: upload default config
+            - name: upload
               run: >-
-                  sshpass -p ${{secrets.CHENCD97_SERVER_PASSWORD}}
-                  scp -P ${{secrets.CHENCD97_SERVER_PORT}}
+                  sshpass -p ${{secrets.SERVER_PASSWORD}}
+                  scp -P ${{secrets.SERVER_PORT}}
                   -r -o StrictHostKeyChecking=no
-                  ./nginx-config/nginx.conf ${{secrets.CHENCD97_SERVER_USERNAME}}@${{secrets.CHENCD97_SERVER_ADDRESS}}:/home/docker/nginx
+                  ./memos-web.zip ${{secrets.SERVER_USERNAME}}@${{secrets.SERVER_ADDRESS}}:/home/docker/nginx/_project
 
-            - name: upload project config
+            - name: del and unzip
               run: >-
-                  sshpass -p ${{secrets.CHENCD97_SERVER_PASSWORD}}
-                  scp -P ${{secrets.CHENCD97_SERVER_PORT}}
-                  -r -o StrictHostKeyChecking=no
-                  ./nginx-config/_config/*.conf ${{secrets.CHENCD97_SERVER_USERNAME}}@${{secrets.CHENCD97_SERVER_ADDRESS}}:/home/docker/nginx/_config
+                  sshpass -p ${{secrets.SERVER_PASSWORD}}
+                  ssh -p ${{secrets.SERVER_PORT}}
+                  -o StrictHostKeyChecking=no ${{secrets.SERVER_USERNAME}}@${{secrets.SERVER_ADDRESS}}
+                  "cd /home/docker/nginx/_project && rm -rf ./memos-web && unzip ./memos-web.zip -d ./memos-web && rm -rf ./memos-web.zip"
 
-            - name: set server restart
-              run: >-
-                  sshpass -p ${{secrets.CHENCD97_SERVER_PASSWORD}}
-                  ssh -p ${{secrets.CHENCD97_SERVER_PORT}}
-                  -o StrictHostKeyChecking=no ${{secrets.CHENCD97_SERVER_USERNAME}}@${{secrets.CHENCD97_SERVER_ADDRESS}}
-                  "touch /home/docker/nginx/_github-upload.temp"
+            - name: send notification
+              run: curl ${{ secrets.BARK }}/GithubAction/Nginx_memos-web项目已更新
