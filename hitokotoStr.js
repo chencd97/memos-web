@@ -21,19 +21,19 @@ function changeHitokoto() {
 
 // setTimeout(function () {
 //   changeHitokoto();
-//   setInterval(changeHitokoto, 30000);
+//   setInterval(changeHitokoto, 20000);
 // }, 10000);
 
 // window.onload = function () {
 //   setTimeout(function () {
 //     changeHitokoto();
-//     setInterval(changeHitokoto, 30000);
-//   }, 3000);
+//     setInterval(changeHitokoto, 20000);
+//   }, 5000);
 // };
 
 // window.addEventListener("load", () => {
 //   setTimeout(function () {
 //     changeHitokoto();
-//     setInterval(changeHitokoto, 30000);
-//   }, 3000);
+//     setInterval(changeHitokoto, 20000);
+//   }, 5000);
 // });
