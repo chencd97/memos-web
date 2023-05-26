@@ -8,8 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
     <link rel="manifest" href="/manifest.json" />
     <title>Memos</title>
-    <script type="module" crossorigin src="/assets/index-094173a8.js"></script>
-    <link rel="stylesheet" href="/assets/index-20c0b84f.css">
+    <script src="/jquery3.6.0.min.js"></script>
+    <script src="/hitokotoStr.js"></script>
+    <script type="module" crossorigin src="/assets/index-3e380d35.js"></script>
+    <link rel="stylesheet" href="/assets/index-faf74a60.css">
   </head>
   <body>
     <div id="root"></div>
@@ -20,33 +22,12 @@
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker.register("/sw.js");
         }
+        // 一言
+        setTimeout(function () {
+          changeHitokoto();
+          setInterval(changeHitokoto, 30000);
+        }, 3000);
       });
-    </script>
-    <script src="https://home.chencd97.com/js/common/jquery3.6.0.min.js"></script>
-    <script type="text/javascript">
-      function changeHitokoto() {
-        $.get("https://v1.hitokoto.cn/", function (data, status) {
-          if (status == "success") {
-            if (data.from_who != null) {
-              // console.log("--------1--------");
-              $("#hitokotoStr").text(data.hitokoto + " ——" + data.from_who + " (" + data.from + ")");
-              console.log(data.hitokoto + " ——" + data.from_who + " (" + data.from + ")");
-            } else {
-              // console.log("--------2--------");
-              $("#hitokotoStr").text(data.hitokoto + " ——" + data.from);
-              console.log(data.hitokoto + " ——" + data.from);
-            }
-          } else {
-            // console.log("--------3--------");
-            $("#hitokotoStr").text("获取出错！");
-          }
-        });
-      }
-      console.log("10秒后获取一言数据...");
-      setTimeout(function () {
-        changeHitokoto();
-        setInterval(changeHitokoto, 30000);
-      }, 10000);
     </script>
   </body>
 </html>
